@@ -8,13 +8,20 @@ export class GatewaySocket implements OnModuleInit {
     server:  Server
 
     onModuleInit() {
-        this.server.emit("message_response", {event: "newMessage", data : {} })
+        this.server.on('connection', (socket) => {
+            console.log("Connected  to", socket.id)
+        })
     }
 
 
 
     @SubscribeMessage('newMessage')
     handleMessage(@MessageBody() data : any) {
+        console.log("New message", data)
 
+        this.server.emit('onMessage', {
+            msg : "On Message ", 
+            content: data
+        })
     }
 }
